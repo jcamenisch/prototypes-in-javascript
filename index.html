@@ -9,7 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content=" Blog Archives Recent Posts ">
+  <meta name="description" content="Using Javscript to model life, the universe, and everything First, a root object: thing = {&#x000A; location: 'the universe',&#x000A; organic: false &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,97 +25,115 @@
   <script src="/prototypes-in-javascript/javascripts/ender.js"></script>
   <script src="/prototypes-in-javascript/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/prototypes-in-javascript/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
+  Included file 'custom/head.html' not found in _includes directory
   
 
 </head>
-
 <body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/prototypes-in-javascript/">My Octopress Blog</a></h1>
-  
-    <h2>A blogging framework for hackers.</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/prototypes-in-javascript/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:jcamenisch.github.com/prototypes-in-javascript" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/prototypes-in-javascript/">Blog</a></li>
-  <li><a href="/prototypes-in-javascript/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
+  <header role="banner">Included file 'header.html' not found in _includes directory</header>
+  <nav role="navigation">Included file 'navigation.html' not found in _includes directory</nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
-  
-  
-  <div class="pagination">
-    
-    <a href="/prototypes-in-javascript/blog/archives">Blog Archives</a>
-    
-  </div>
+      <h1>Using Javscript to model life, the universe, and everything</h1>
+<div class='page'>
+  <h3>
+    First, a root object:
+  </h3>
+  <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
+  <h3>
+    Then, to inherit from thing. First, the old-fashioned way:
+  </h3>
+  <pre>ConstructThing = function() {&#x000A;  this.createdAt = new Date;&#x000A;};&#x000A;ConstructThing.prototype = thing;</pre>
+  <pre>mineral = new ConstructThing();&#x000A;mineral.location;</pre>
+  <pre>ConstructMineral = function(){};&#x000A;ConstructMineral.prototype = mineral;</pre>
+  <pre>organism = new ConstructThing();&#x000A;organism.organic = true;</pre>
+  <pre>ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
+  <pre>vegetable = new ConstructOrganism;&#x000A;ConstructVegetable = function(){};&#x000A;ConstructVegetable.prototype = vegetable;</pre>
+  <pre>animal = new ConstructOrganism;&#x000A;animal.motile = true;</pre>
+  <pre>ConstructAnimal = function(){};&#x000A;ConstructAnimal.prototype = animal;</pre>
+  <pre>caveMan = new ConstructAnimal;&#x000A;club = new ConstructVegetable;&#x000A;rock = new ConstructMineral;</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.location });</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.organic });</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.motile });</pre>
 </div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
+<div class='page'>
+  <h3>
+    Problems with this approach:
+  </h3>
+  <ol>
+    <li>It&#8217;s rather awkward. (verbose, and conflicted)</li>
+    <li>
+      The danger of forgetting &#8220;new&#8221;:
+      <pre>OtherWindow = function(location) {&#x000A;  this.location = location;&#x000A;}&#x000A;anotherWindow = new OtherWindow(); // fine&#x000A;anotherWindow = OtherWindow();     // doh!</pre>
+    </li>
+    <li>
+      Constructors are not inheritable:
+      <pre>[caveMan, club, rock].map(function(o) { return o.createdAt });</pre>
+      Back to constructors in a bit&#8230;
+    </li>
+  </ol>
+</div>
+<div class='page'>
+  <h3>Could there be a less awkward way to inherit?</h3>
+  <p>One great answer: ECMAScript5 gives us:</p>
+  <pre>something = Object.create(thing);</pre>
+  <p>
+    We can easily backport this (see http://javascript.crockford.com/prototypal.html):
+  </p>
+  <pre>Object.create = function (proto) {&#x000A;  function Constructor() {}&#x000A;  Constructor.prototype = proto;&#x000A;  return new Constructor();&#x000A;};</pre>
+</div>
+<div class='page'>
+  <h2>Let&#8217;s set up that taxonomy up again.</h2>
+  <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
+  <pre>mineral = Object.create(thing);&#x000A;organism = Object.create(thing);&#x000A;vegetable = Object.create(organism);&#x000A;animal = Object.create(organism);</pre>
+  <pre>organism.organic = true;&#x000A;animal.motile = true;</pre>
+</div>
+<div class='page'>
+  <pre>caveMan = Object.create(animal);&#x000A;club = Object.create(vegetable);&#x000A;rock = Object.create(mineral);</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.location });&#x000A;[caveMan, club, rock].map(function(o) { return o.organic });&#x000A;[caveMan, club, rock].map(function(o) { return o.motile });</pre>
+</div>
+<div class='page'>
+  <h2>What about constructors?</h2>
+  <p>
+    A simple proposal (inspired by
+    <a href='http://javascript.crockford.com/prototypal.html'>Crockford</a>
+    ):
+  </p>
+  <pre>thing.initialize = function() {&#x000A;  this.createdAt = new Date;&#x000A;}</pre>
+  <pre>thing.beget = function(properties) {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize;&#x000A;  return begotten;&#x000A;}</pre>
+  <pre>mineral = thing.beget();&#x000A;mineral.location;&#x000A;mineral.createdAt;</pre>
+</div>
+<div class='page'>
+  <h2>A step further:</h2>
+  <p>Target: provide for initializing properties with</p>
+  <pre>// something = thing.beget({prop: 'value', ...});</pre>
+</div>
+<div class='page'>
+  <pre>thing.beget = function(properties) {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize;&#x000A;  for (key in properties) {&#x000A;    if (properties.hasOwnProperty(key)) {&#x000A;      begotten[key] = properties[key];&#x000A;    }&#x000A;  }&#x000A;  return begotten;&#x000A;};</pre>
+</div>
+<div class='page'>
+  <pre>mineral = thing.beget();&#x000A;organism = thing.beget({organic: true});&#x000A;vegetable = organism.beget();&#x000A;animal = organism.beget({motile: true});</pre>
+</div>
+<div class='page'>
+  <pre>caveMan = animal.beget();&#x000A;club = vegetable.beget();&#x000A;rock = mineral.beget();</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.location });</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.organic });</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.motile });</pre>
+  <pre>[caveMan, club, rock].map(function(o) { return o.createdAt });&#x000A;</pre>
+</div>
+<div class='page'>
+  <h2>Recommended Reading</h2>
+  <ul>
+  <li><a href="http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/">Understanding “Prototypes” in JavaScript</a>, Yehuda Katz</li>
+  <li><a href="http://ejohn.org/blog/simple-javascript-inheritance/">Simple JavaScript Inheritance</a>, John Resig</li>
+  <li><a href="http://joost.zeekat.nl/constructors-considered-mildly-confusing.html">Constructors considered mildly confusing</a> by Joost Diepenmaat, Zeekat Softwareontwikkeling</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Inheritance_and_the_prototype_chain">Inheritance and the prototype chain</a>, MDN</li>
   </ul>
-</section>
-
-
-
-
-
-
-  
-</aside>
+</div>
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Your Name -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
   
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
 
 
 </body>
