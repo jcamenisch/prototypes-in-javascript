@@ -1,0 +1,206 @@
+---
+layout: default
+---
+%h1 Using Javscript to model life, the universe, and everything
+.page
+  %h3
+    First, a root object:
+  %pre
+    :preserve
+      thing = {
+        location: 'the universe',
+        organic: false,
+        motile: false
+      };
+  %h3
+    Then, to inherit from thing. First, the old-fashioned way:
+  %pre
+    :preserve
+      ConstructThing = function() {
+        this.createdAt = new Date;
+      };
+      ConstructThing.prototype = thing;
+  %pre
+    :preserve
+      mineral = new ConstructThing();
+      mineral.location;
+  %pre
+    :preserve
+      ConstructMineral = function(){};
+      ConstructMineral.prototype = mineral;
+  %pre
+    :preserve
+      organism = new ConstructThing();
+      organism.organic = true;
+  %pre
+    :preserve
+      ConstructOrganism = function(){};
+      ConstructOrganism.prototype = organism;
+  %pre
+    :preserve
+      vegetable = new ConstructOrganism;
+      ConstructVegetable = function(){};
+      ConstructVegetable.prototype = vegetable;
+  %pre
+    :preserve
+      animal = new ConstructOrganism;
+      animal.motile = true;
+  %pre
+    :preserve
+      ConstructAnimal = function(){};
+      ConstructAnimal.prototype = animal;
+  %pre
+    :preserve
+      caveMan = new ConstructAnimal;
+      club = new ConstructVegetable;
+      rock = new ConstructMineral;
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.location });
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.organic });
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.motile });
+.page
+  %h3
+    Problems with this approach:
+  %ol
+    %li It's rather awkward. (verbose, and conflicted)
+    %li
+      The danger of forgetting "new":
+      %pre
+        :preserve
+          OtherWindow = function(location) {
+            this.location = location;
+          }
+          anotherWindow = new OtherWindow(); // fine
+          anotherWindow = OtherWindow();     // doh!
+    %li
+      Constructors are not inheritable:
+      %pre
+        :preserve
+          [caveMan, club, rock].map(function(o) { return o.createdAt });
+      Back to constructors in a bit...
+.page
+  %h3 Could there be a less awkward way to inherit?
+  %p One great answer: ECMAScript5 gives us:
+  %pre
+    :preserve
+      something = Object.create(thing);
+  %p
+    We can easily backport this (see http://javascript.crockford.com/prototypal.html):
+  %pre
+    :preserve
+      Object.create = function (proto) {
+        function Constructor() {}
+        Constructor.prototype = proto;
+        return new Constructor();
+      };
+.page
+  %h2 Let's set up that taxonomy up again.
+  %pre
+    :preserve
+      thing = {
+        location: 'the universe',
+        organic: false,
+        motile: false
+      };
+  %pre
+    :preserve
+      mineral = Object.create(thing);
+      organism = Object.create(thing);
+      vegetable = Object.create(organism);
+      animal = Object.create(organism);
+  %pre
+    :preserve
+      organism.organic = true;
+      animal.motile = true;
+.page
+  %pre
+    :preserve
+      caveMan = Object.create(animal);
+      club = Object.create(vegetable);
+      rock = Object.create(mineral);
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.location });
+      [caveMan, club, rock].map(function(o) { return o.organic });
+      [caveMan, club, rock].map(function(o) { return o.motile });
+.page
+  %h2 What about constructors?
+  %p
+    A simple proposal (inspired by
+    %a{:href => 'http://javascript.crockford.com/prototypal.html'}<
+      Crockford
+    ):
+  %pre
+    :preserve
+      thing.initialize = function() {
+        this.createdAt = new Date;
+      }
+  %pre
+    :preserve
+      thing.beget = function(properties) {
+        var begotten = Object.create(this);
+        begotten.initialize;
+        return begotten;
+      }
+  %pre
+    :preserve
+      mineral = thing.beget();
+      mineral.location;
+      mineral.createdAt;
+.page
+  %h2 A step further:
+  %p Target: provide for initializing properties with
+  %pre
+    :preserve
+      // something = thing.beget({prop: 'value', ...});
+.page
+  %pre
+    :preserve
+      thing.beget = function(properties) {
+        var begotten = Object.create(this);
+        begotten.initialize;
+        for (key in properties) {
+          if (properties.hasOwnProperty(key)) {
+            begotten[key] = properties[key];
+          }
+        }
+        return begotten;
+      };
+.page
+  %pre
+    :preserve
+      mineral = thing.beget();
+      organism = thing.beget({organic: true});
+      vegetable = organism.beget();
+      animal = organism.beget({motile: true});
+.page
+  %pre
+    :preserve
+      caveMan = animal.beget();
+      club = vegetable.beget();
+      rock = mineral.beget();
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.location });
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.organic });
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.motile });
+  %pre
+    :preserve
+      [caveMan, club, rock].map(function(o) { return o.createdAt });
+
+.page
+  %h2 Recommended Reading
+  :markdown
+    - [Understanding “Prototypes” in JavaScript](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/), Yehuda Katz
+    - [Simple JavaScript Inheritance](http://ejohn.org/blog/simple-javascript-inheritance/), John Resig
+    - [Constructors considered mildly confusing](http://joost.zeekat.nl/constructors-considered-mildly-confusing.html) by Joost Diepenmaat, Zeekat Softwareontwikkeling
+    - [Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Inheritance_and_the_prototype_chain), MDN
