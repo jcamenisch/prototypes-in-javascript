@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://jcamenisch.github.com/prototypes-in-javascript/atom.xml" rel="self"/>
+  <link href="http://jcamenisch.github.com/prototypes-in-javascript/"/>
+  <updated>2012-11-12T20:24:22-06:00</updated>
+  <id>http://jcamenisch.github.com/prototypes-in-javascript/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
