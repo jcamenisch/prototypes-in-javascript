@@ -3,12 +3,12 @@ layout: default
 ---
 
 .page
-  %h1 Animal, Vegetable, or Mineral?
-  %p wherein prototypal inheritance models the universe in JavaScript
+  .header
+    %h1 Animal, Vegetable, or Mineral?
+    %p wherein prototypal inheritance models the universe in JavaScript
 
 .page
-  %h3
-    First, a root object:
+  %h3 First, a root object:
   %pre
     :preserve
       thing = {
@@ -17,8 +17,9 @@ layout: default
         motile: false
       };
 .page
-  %h3 Then, to inherit from thing.
-  %p The old-fashioned way takes 3 lines:
+  .header
+    %h3 Then, to inherit from thing.
+    %p The old-fashioned way takes 3 lines:
   %pre
     :preserve
       ConstructThing = function() {};
@@ -49,11 +50,13 @@ layout: default
 
       ConstructOrganism = function(){};
       ConstructOrganism.prototype = organism;
+.page
   %pre
     :preserve
       vegetable = new ConstructOrganism;
       ConstructVegetable = function(){};
       ConstructVegetable.prototype = vegetable;
+.page
   %pre
     :preserve
       animal = new ConstructOrganism;
@@ -62,6 +65,7 @@ layout: default
     :preserve
       ConstructAnimal = function(){};
       ConstructAnimal.prototype = animal;
+.page
   %pre
     :preserve
       caveMan = new ConstructAnimal;
@@ -95,10 +99,10 @@ layout: default
       %pre
         :preserve
           [caveMan, club, rock].map(function(o) { return o.createdAt });
-      Back to constructors in a bit...
 .page
-  %h3 Could there be a less awkward way to inherit?
-  %p One great answer: ECMAScript5 gives us:
+  .header
+    %h3 Could there be a less awkward way to inherit?
+    %p One great answer: ECMAScript5 gives us:
   %pre
     :preserve
       something = Object.create(thing);
@@ -123,12 +127,13 @@ layout: default
   %pre
     :preserve
       mineral = Object.create(thing);
+
       organism = Object.create(thing);
-      vegetable = Object.create(organism);
-      animal = Object.create(organism);
-  %pre
-    :preserve
       organism.organic = true;
+
+      vegetable = Object.create(organism);
+
+      animal = Object.create(organism);
       animal.motile = true;
 .page
   %pre
@@ -164,7 +169,6 @@ layout: default
     :preserve
       mineral = thing.beget();
       mineral.location;
-      mineral.createdAt;
 .page
   %h2 A step further:
   %p Target: provide for initializing properties with
@@ -213,6 +217,7 @@ layout: default
 .page
   %h2 Recommended Reading
   :markdown
+    - See the [Source code](/javascripts/slide_show.js) to this slide deck for a less contrived example.
     - [Understanding “Prototypes” in JavaScript](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/), Yehuda Katz
     - [Simple JavaScript Inheritance](http://ejohn.org/blog/simple-javascript-inheritance/), John Resig
     - [Constructors considered mildly confusing](http://joost.zeekat.nl/constructors-considered-mildly-confusing.html) by Joost Diepenmaat, Zeekat Softwareontwikkeling
