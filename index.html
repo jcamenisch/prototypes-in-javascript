@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
-  <meta name="author" content="Your Name">
+  <title>Animal, Vegetable, or Mineral?</title>
+  <meta name="author" content="Jonathan Camenisch">
 
   
-  <meta name="description" content="Animal, Vegetable, or Mineral? Prototypal Inheritance to model the universe in JavaScript First, a root object: thing = {&#x000A; location: 'the &hellip;">
+  <meta name="description" content="Animal, Vegetable, or Mineral? wherein prototypal inheritance models the universe in JavaScript First, a root object: thing = {&#x000A; location: ' &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,33 +24,37 @@
   <script src="/prototypes-in-javascript/javascripts/modernizr-2.0.js"></script>
   <script src="/prototypes-in-javascript/javascripts/ender.js"></script>
   <script src="/prototypes-in-javascript/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/prototypes-in-javascript/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
-  Included file 'custom/head.html' not found in _includes directory
+  <link href="/prototypes-in-javascript/atom.xml" rel="alternate" title="Animal, Vegetable, or Mineral?" type="application/atom+xml">
+  
   
 
 </head>
-<body   >
-  <header role="banner">Included file 'header.html' not found in _includes directory</header>
-  <nav role="navigation">Included file 'navigation.html' not found in _includes directory</nav>
+<body>
   <div id="main">
-    <div id="content">
-      <div class='page'>
+    <div class='page'>
   <h1>Animal, Vegetable, or Mineral?</h1>
-  <p>Prototypal Inheritance to model the universe in JavaScript</p>
+  <p>wherein prototypal inheritance models the universe in JavaScript</p>
 </div>
 <div class='page'>
   <h3>
     First, a root object:
   </h3>
   <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
-  <h3>
-    Then, to inherit from thing. First, the old-fashioned way:
-  </h3>
-  <pre>ConstructThing = function() {&#x000A;  this.createdAt = new Date;&#x000A;};&#x000A;ConstructThing.prototype = thing;</pre>
-  <pre>mineral = new ConstructThing();&#x000A;mineral.location;</pre>
+</div>
+<div class='page'>
+  <h3>Then, to inherit from thing.</h3>
+  <p>The old-fashioned way takes 3 lines:</p>
+  <pre>ConstructThing = function() {};&#x000A;ConstructThing.prototype = thing;&#x000A;mineral = new ConstructThing();</pre>
+  <pre>mineral.location;</pre>
+</div>
+<div class='page'>
+  <h3>We could have the constructor do something:</h3>
+  <pre>ConstructThing = function() {&#x000A;  this.createdAt = new Date;&#x000A;};&#x000A;ConstructThing.prototype = thing;&#x000A;mineral = new ConstructThing();</pre>
+</div>
+<div class='page'>
+  <h3>Moving along to the rest of the universe</h3>
   <pre>ConstructMineral = function(){};&#x000A;ConstructMineral.prototype = mineral;</pre>
-  <pre>organism = new ConstructThing();&#x000A;organism.organic = true;</pre>
-  <pre>ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
+  <pre>organism = new ConstructThing();&#x000A;organism.organic = true;&#x000A;&#x000A;ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
   <pre>vegetable = new ConstructOrganism;&#x000A;ConstructVegetable = function(){};&#x000A;ConstructVegetable.prototype = vegetable;</pre>
   <pre>animal = new ConstructOrganism;&#x000A;animal.motile = true;</pre>
   <pre>ConstructAnimal = function(){};&#x000A;ConstructAnimal.prototype = animal;</pre>
@@ -135,7 +139,6 @@
   </ul>
 </div>
 
-    </div>
   </div>
   
 

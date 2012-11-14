@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Animal, Vegetable, or Mineral?]]></title>
   <link href="http://jcamenisch.github.com/prototypes-in-javascript/atom.xml" rel="self"/>
   <link href="http://jcamenisch.github.com/prototypes-in-javascript/"/>
-  <updated>2012-11-13T09:17:18-06:00</updated>
+  <updated>2012-11-13T19:20:48-06:00</updated>
   <id>http://jcamenisch.github.com/prototypes-in-javascript/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Jonathan Camenisch]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
