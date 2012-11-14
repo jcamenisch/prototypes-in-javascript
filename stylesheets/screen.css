@@ -61,6 +61,18 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /* To use the light Solarized highlighting theme uncomment the following line */
 /* If you want to tweak the Solarized colors you can do that here */
 /* Non highlighted code colors */
+.page {
+  margin-top: 3em;
+  padding: 0 1em;
+}
+.page > :first-child, .page > :first-child > :first-child {
+  margin-top: 0;
+}
+
+li {
+  margin-left: 1.5em;
+}
+
 /* non highlighted code colors */
 /* Navigation */
 /* Sidebar colors */
