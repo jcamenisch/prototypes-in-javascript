@@ -31,18 +31,20 @@
 <body>
   <div id="main">
     <div class='page'>
-  <h1>Animal, Vegetable, or Mineral?</h1>
-  <p>wherein prototypal inheritance models the universe in JavaScript</p>
+  <div class='header'>
+    <h1>Animal, Vegetable, or Mineral?</h1>
+    <p>wherein prototypal inheritance models the universe in JavaScript</p>
+  </div>
 </div>
 <div class='page'>
-  <h3>
-    First, a root object:
-  </h3>
+  <h3>First, a root object:</h3>
   <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
 </div>
 <div class='page'>
-  <h3>Then, to inherit from thing.</h3>
-  <p>The old-fashioned way takes 3 lines:</p>
+  <div class='header'>
+    <h3>Then, to inherit from thing.</h3>
+    <p>The old-fashioned way takes 3 lines:</p>
+  </div>
   <pre>ConstructThing = function() {};&#x000A;ConstructThing.prototype = thing;&#x000A;mineral = new ConstructThing();</pre>
   <pre>mineral.location;</pre>
 </div>
@@ -54,9 +56,15 @@
   <h3>Moving along to the rest of the universe</h3>
   <pre>ConstructMineral = function(){};&#x000A;ConstructMineral.prototype = mineral;</pre>
   <pre>organism = new ConstructThing();&#x000A;organism.organic = true;&#x000A;&#x000A;ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
+</div>
+<div class='page'>
   <pre>vegetable = new ConstructOrganism;&#x000A;ConstructVegetable = function(){};&#x000A;ConstructVegetable.prototype = vegetable;</pre>
+</div>
+<div class='page'>
   <pre>animal = new ConstructOrganism;&#x000A;animal.motile = true;</pre>
   <pre>ConstructAnimal = function(){};&#x000A;ConstructAnimal.prototype = animal;</pre>
+</div>
+<div class='page'>
   <pre>caveMan = new ConstructAnimal;&#x000A;club = new ConstructVegetable;&#x000A;rock = new ConstructMineral;</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.location });</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.organic });</pre>
@@ -75,13 +83,14 @@
     <li>
       Constructors are not inheritable:
       <pre>[caveMan, club, rock].map(function(o) { return o.createdAt });</pre>
-      Back to constructors in a bit&#8230;
     </li>
   </ol>
 </div>
 <div class='page'>
-  <h3>Could there be a less awkward way to inherit?</h3>
-  <p>One great answer: ECMAScript5 gives us:</p>
+  <div class='header'>
+    <h3>Could there be a less awkward way to inherit?</h3>
+    <p>One great answer: ECMAScript5 gives us:</p>
+  </div>
   <pre>something = Object.create(thing);</pre>
   <p>
     We can easily backport this (see http://javascript.crockford.com/prototypal.html):
@@ -91,8 +100,7 @@
 <div class='page'>
   <h2>Let&#8217;s set up that taxonomy up again.</h2>
   <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
-  <pre>mineral = Object.create(thing);&#x000A;organism = Object.create(thing);&#x000A;vegetable = Object.create(organism);&#x000A;animal = Object.create(organism);</pre>
-  <pre>organism.organic = true;&#x000A;animal.motile = true;</pre>
+  <pre>mineral = Object.create(thing);&#x000A;&#x000A;organism = Object.create(thing);&#x000A;organism.organic = true;&#x000A;&#x000A;vegetable = Object.create(organism);&#x000A;&#x000A;animal = Object.create(organism);&#x000A;animal.motile = true;</pre>
 </div>
 <div class='page'>
   <pre>caveMan = Object.create(animal);&#x000A;club = Object.create(vegetable);&#x000A;rock = Object.create(mineral);</pre>
@@ -107,7 +115,7 @@
   </p>
   <pre>thing.initialize = function() {&#x000A;  this.createdAt = new Date;&#x000A;}</pre>
   <pre>thing.beget = function(properties) {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize;&#x000A;  return begotten;&#x000A;}</pre>
-  <pre>mineral = thing.beget();&#x000A;mineral.location;&#x000A;mineral.createdAt;</pre>
+  <pre>mineral = thing.beget();&#x000A;mineral.location;</pre>
 </div>
 <div class='page'>
   <h2>A step further:</h2>
@@ -130,6 +138,7 @@
 <div class='page'>
   <h2>Recommended Reading</h2>
   <ul>
+  <li>See the <a href="/prototypes-in-javascript/javascripts/slide_show.js">Source code</a> to this slide deck for a less contrived example.</li>
   <li><a href="http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/">Understanding “Prototypes” in JavaScript</a>, Yehuda Katz</li>
   <li><a href="http://ejohn.org/blog/simple-javascript-inheritance/">Simple JavaScript Inheritance</a>, John Resig</li>
   <li><a href="http://joost.zeekat.nl/constructors-considered-mildly-confusing.html">Constructors considered mildly confusing</a> by Joost Diepenmaat, Zeekat Softwareontwikkeling</li>
