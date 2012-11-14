@@ -19,3 +19,16 @@
 //$sidebar-pad-medium: 15px;
 //$sidebar-pad-wide: 20px;
 //$sidebar-width-wide: 300px;
+
+.page {
+  margin-top: 3em;
+  padding: 0 1em;
+
+  > :first-child, > :first-child > :first-child {
+    margin-top: 0;
+  }
+}
+
+li {
+  margin-left: 1.5em;
+}
