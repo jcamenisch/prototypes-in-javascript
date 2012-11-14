@@ -16,18 +16,28 @@ layout: default
         organic: false,
         motile: false
       };
-  %h3
-    Then, to inherit from thing. First, the old-fashioned way:
+.page
+  %h3 Then, to inherit from thing.
+  %p The old-fashioned way takes 3 lines:
+  %pre
+    :preserve
+      ConstructThing = function() {};
+      ConstructThing.prototype = thing;
+      mineral = new ConstructThing();
+  %pre
+    :preserve
+      mineral.location;
+.page
+  %h3 We could have the constructor do something:
   %pre
     :preserve
       ConstructThing = function() {
         this.createdAt = new Date;
       };
       ConstructThing.prototype = thing;
-  %pre
-    :preserve
       mineral = new ConstructThing();
-      mineral.location;
+.page
+  %h3 Moving along to the rest of the universe
   %pre
     :preserve
       ConstructMineral = function(){};
@@ -36,8 +46,7 @@ layout: default
     :preserve
       organism = new ConstructThing();
       organism.organic = true;
-  %pre
-    :preserve
+
       ConstructOrganism = function(){};
       ConstructOrganism.prototype = organism;
   %pre
