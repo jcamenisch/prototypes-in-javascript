@@ -11,7 +11,7 @@ layout: default
   %h3 First, a root object:
   %pre
     :preserve
-      thing = {
+      var thing = {
         location: 'the universe',
         organic: false,
         motile: false
@@ -22,9 +22,9 @@ layout: default
     %p The old-fashioned way takes 3 lines:
   %pre
     :preserve
-      ConstructThing = function() {};
+      var ConstructThing = function() {};
       ConstructThing.prototype = thing;
-      mineral = new ConstructThing();
+      var mineral = new ConstructThing();
   %pre
     :preserve
       mineral.location;
@@ -32,45 +32,45 @@ layout: default
   %h3 We could have the constructor do something:
   %pre
     :preserve
-      ConstructThing = function() {
+      var ConstructThing = function() {
         this.createdAt = new Date;
       };
       ConstructThing.prototype = thing;
-      mineral = new ConstructThing();
+      var mineral = new ConstructThing();
 .page
   %h3 Moving along to the rest of the universe
   %pre
     :preserve
-      ConstructMineral = function(){};
+      var ConstructMineral = function(){};
       ConstructMineral.prototype = mineral;
   %pre
     :preserve
-      organism = new ConstructThing();
+      var organism = new ConstructThing();
       organism.organic = true;
 
-      ConstructOrganism = function(){};
+      var ConstructOrganism = function(){};
       ConstructOrganism.prototype = organism;
 .page
   %pre
     :preserve
-      vegetable = new ConstructOrganism;
-      ConstructVegetable = function(){};
+      var vegetable = new ConstructOrganism;
+      var ConstructVegetable = function(){};
       ConstructVegetable.prototype = vegetable;
 .page
   %pre
     :preserve
-      animal = new ConstructOrganism;
+      var animal = new ConstructOrganism;
       animal.motile = true;
   %pre
     :preserve
-      ConstructAnimal = function(){};
+      var ConstructAnimal = function(){};
       ConstructAnimal.prototype = animal;
 .page
   %pre
     :preserve
-      caveMan = new ConstructAnimal;
-      club = new ConstructVegetable;
-      rock = new ConstructMineral;
+      var caveMan = new ConstructAnimal;
+      var club = new ConstructVegetable;
+      var rock = new ConstructMineral;
   %pre
     :preserve
       [caveMan, club, rock].map(function(o) { return o.location });
@@ -89,11 +89,11 @@ layout: default
       The danger of forgetting "new":
       %pre
         :preserve
-          OtherWindow = function(location) {
+          var OtherWindow = function(location) {
             this.location = location;
           }
-          anotherWindow = new OtherWindow(); // fine
-          anotherWindow = OtherWindow();     // doh!
+          var anotherWindow = new OtherWindow(); // fine
+          var anotherWindow = OtherWindow();     // doh!
     %li
       Constructors are not inheritable:
       %pre
@@ -105,9 +105,9 @@ layout: default
     %p One great answer: ECMAScript5 gives us:
   %pre
     :preserve
-      something = Object.create(thing);
-  %p
-    We can easily backport this (see http://javascript.crockford.com/prototypal.html):
+      var something = Object.create(thing);
+  :markdown
+    We can easily backport this (see [javascript.crockford.com/prototypal.html](http://javascript.crockford.com/prototypal.html)):
   %pre
     :preserve
       Object.create = function (proto) {
@@ -119,28 +119,28 @@ layout: default
   %h2 Let's set up that taxonomy up again.
   %pre
     :preserve
-      thing = {
+      var thing = {
         location: 'the universe',
         organic: false,
         motile: false
       };
   %pre
     :preserve
-      mineral = Object.create(thing);
+      var mineral = Object.create(thing);
 
-      organism = Object.create(thing);
+      var organism = Object.create(thing);
       organism.organic = true;
 
-      vegetable = Object.create(organism);
+      var vegetable = Object.create(organism);
 
-      animal = Object.create(organism);
+      var animal = Object.create(organism);
       animal.motile = true;
 .page
   %pre
     :preserve
-      caveMan = Object.create(animal);
-      club = Object.create(vegetable);
-      rock = Object.create(mineral);
+      var caveMan = Object.create(animal);
+      var club = Object.create(vegetable);
+      var rock = Object.create(mineral);
   %pre
     :preserve
       [caveMan, club, rock].map(function(o) { return o.location });
@@ -150,8 +150,7 @@ layout: default
   %h2 What about constructors?
   %p
     A simple proposal (inspired by
-    %a{:href => 'http://javascript.crockford.com/prototypal.html'}<
-      Crockford
+    %a{:href => 'http://javascript.crockford.com/prototypal.html'}< Crockford
     ):
   %pre
     :preserve
@@ -167,7 +166,7 @@ layout: default
       }
   %pre
     :preserve
-      mineral = thing.beget();
+      var mineral = thing.beget();
       mineral.location;
 .page
   %h2 A step further:
@@ -191,10 +190,10 @@ layout: default
 .page
   %pre
     :preserve
-      mineral = thing.beget();
-      organism = thing.beget({organic: true});
-      vegetable = organism.beget();
-      animal = organism.beget({motile: true});
+      var mineral = thing.beget();
+      var organism = thing.beget({organic: true});
+      var vegetable = organism.beget();
+      var animal = organism.beget({motile: true});
 .page
   %pre
     :preserve
