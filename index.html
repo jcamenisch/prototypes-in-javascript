@@ -9,7 +9,7 @@
   <meta name="author" content="Jonathan Camenisch">
 
   
-  <meta name="description" content="Animal, Vegetable, or Mineral? wherein prototypal inheritance models the universe in JavaScript First, a root object: thing = {&#x000A; location: ' &hellip;">
+  <meta name="description" content="Animal, Vegetable, or Mineral? wherein prototypal inheritance models the universe in JavaScript First, a root object: var thing = {&#x000A; location &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -38,34 +38,34 @@
 </div>
 <div class='page'>
   <h3>First, a root object:</h3>
-  <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
+  <pre>var thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
 </div>
 <div class='page'>
   <div class='header'>
     <h3>Then, to inherit from thing.</h3>
     <p>The old-fashioned way takes 3 lines:</p>
   </div>
-  <pre>ConstructThing = function() {};&#x000A;ConstructThing.prototype = thing;&#x000A;mineral = new ConstructThing();</pre>
+  <pre>var ConstructThing = function() {};&#x000A;ConstructThing.prototype = thing;&#x000A;var mineral = new ConstructThing();</pre>
   <pre>mineral.location;</pre>
 </div>
 <div class='page'>
   <h3>We could have the constructor do something:</h3>
-  <pre>ConstructThing = function() {&#x000A;  this.createdAt = new Date;&#x000A;};&#x000A;ConstructThing.prototype = thing;&#x000A;mineral = new ConstructThing();</pre>
+  <pre>var ConstructThing = function() {&#x000A;  this.createdAt = new Date;&#x000A;};&#x000A;ConstructThing.prototype = thing;&#x000A;var mineral = new ConstructThing();</pre>
 </div>
 <div class='page'>
   <h3>Moving along to the rest of the universe</h3>
-  <pre>ConstructMineral = function(){};&#x000A;ConstructMineral.prototype = mineral;</pre>
-  <pre>organism = new ConstructThing();&#x000A;organism.organic = true;&#x000A;&#x000A;ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
+  <pre>var ConstructMineral = function(){};&#x000A;ConstructMineral.prototype = mineral;</pre>
+  <pre>var organism = new ConstructThing();&#x000A;organism.organic = true;&#x000A;&#x000A;var ConstructOrganism = function(){};&#x000A;ConstructOrganism.prototype = organism;</pre>
 </div>
 <div class='page'>
-  <pre>vegetable = new ConstructOrganism;&#x000A;ConstructVegetable = function(){};&#x000A;ConstructVegetable.prototype = vegetable;</pre>
+  <pre>var vegetable = new ConstructOrganism;&#x000A;var ConstructVegetable = function(){};&#x000A;ConstructVegetable.prototype = vegetable;</pre>
 </div>
 <div class='page'>
-  <pre>animal = new ConstructOrganism;&#x000A;animal.motile = true;</pre>
-  <pre>ConstructAnimal = function(){};&#x000A;ConstructAnimal.prototype = animal;</pre>
+  <pre>var animal = new ConstructOrganism;&#x000A;animal.motile = true;</pre>
+  <pre>var ConstructAnimal = function(){};&#x000A;ConstructAnimal.prototype = animal;</pre>
 </div>
 <div class='page'>
-  <pre>caveMan = new ConstructAnimal;&#x000A;club = new ConstructVegetable;&#x000A;rock = new ConstructMineral;</pre>
+  <pre>var caveMan = new ConstructAnimal;&#x000A;var club = new ConstructVegetable;&#x000A;var rock = new ConstructMineral;</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.location });</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.organic });</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.motile });</pre>
@@ -78,7 +78,7 @@
     <li>It&#8217;s rather awkward. (verbose, and conflicted)</li>
     <li>
       The danger of forgetting &#8220;new&#8221;:
-      <pre>OtherWindow = function(location) {&#x000A;  this.location = location;&#x000A;}&#x000A;anotherWindow = new OtherWindow(); // fine&#x000A;anotherWindow = OtherWindow();     // doh!</pre>
+      <pre>var OtherWindow = function(location) {&#x000A;  this.location = location;&#x000A;}&#x000A;var anotherWindow = new OtherWindow(); // fine&#x000A;var anotherWindow = OtherWindow();     // doh!</pre>
     </li>
     <li>
       Constructors are not inheritable:
@@ -91,19 +91,17 @@
     <h3>Could there be a less awkward way to inherit?</h3>
     <p>One great answer: ECMAScript5 gives us:</p>
   </div>
-  <pre>something = Object.create(thing);</pre>
-  <p>
-    We can easily backport this (see http://javascript.crockford.com/prototypal.html):
-  </p>
+  <pre>var something = Object.create(thing);</pre>
+  <p>We can easily backport this (see <a href="http://javascript.crockford.com/prototypal.html">javascript.crockford.com/prototypal.html</a>):</p>
   <pre>Object.create = function (proto) {&#x000A;  function Constructor() {}&#x000A;  Constructor.prototype = proto;&#x000A;  return new Constructor();&#x000A;};</pre>
 </div>
 <div class='page'>
   <h2>Let&#8217;s set up that taxonomy up again.</h2>
-  <pre>thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
-  <pre>mineral = Object.create(thing);&#x000A;&#x000A;organism = Object.create(thing);&#x000A;organism.organic = true;&#x000A;&#x000A;vegetable = Object.create(organism);&#x000A;&#x000A;animal = Object.create(organism);&#x000A;animal.motile = true;</pre>
+  <pre>var thing = {&#x000A;  location: 'the universe',&#x000A;  organic: false,&#x000A;  motile: false&#x000A;};</pre>
+  <pre>var mineral = Object.create(thing);&#x000A;&#x000A;var organism = Object.create(thing);&#x000A;organism.organic = true;&#x000A;&#x000A;var vegetable = Object.create(organism);&#x000A;&#x000A;var animal = Object.create(organism);&#x000A;animal.motile = true;</pre>
 </div>
 <div class='page'>
-  <pre>caveMan = Object.create(animal);&#x000A;club = Object.create(vegetable);&#x000A;rock = Object.create(mineral);</pre>
+  <pre>var caveMan = Object.create(animal);&#x000A;var club = Object.create(vegetable);&#x000A;var rock = Object.create(mineral);</pre>
   <pre>[caveMan, club, rock].map(function(o) { return o.location });&#x000A;[caveMan, club, rock].map(function(o) { return o.organic });&#x000A;[caveMan, club, rock].map(function(o) { return o.motile });</pre>
 </div>
 <div class='page'>
@@ -115,7 +113,7 @@
   </p>
   <pre>thing.initialize = function() {&#x000A;  this.createdAt = new Date;&#x000A;}</pre>
   <pre>thing.beget = function(properties) {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize;&#x000A;  return begotten;&#x000A;}</pre>
-  <pre>mineral = thing.beget();&#x000A;mineral.location;</pre>
+  <pre>var mineral = thing.beget();&#x000A;mineral.location;</pre>
 </div>
 <div class='page'>
   <h2>A step further:</h2>
@@ -126,7 +124,7 @@
   <pre>thing.beget = function(properties) {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize;&#x000A;  for (key in properties) {&#x000A;    if (properties.hasOwnProperty(key)) {&#x000A;      begotten[key] = properties[key];&#x000A;    }&#x000A;  }&#x000A;  return begotten;&#x000A;};</pre>
 </div>
 <div class='page'>
-  <pre>mineral = thing.beget();&#x000A;organism = thing.beget({organic: true});&#x000A;vegetable = organism.beget();&#x000A;animal = organism.beget({motile: true});</pre>
+  <pre>var mineral = thing.beget();&#x000A;var organism = thing.beget({organic: true});&#x000A;var vegetable = organism.beget();&#x000A;var animal = organism.beget({motile: true});</pre>
 </div>
 <div class='page'>
   <pre>caveMan = animal.beget();&#x000A;club = vegetable.beget();&#x000A;rock = mineral.beget();</pre>
