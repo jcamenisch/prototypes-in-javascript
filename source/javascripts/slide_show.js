@@ -18,6 +18,8 @@ ss_Object = {
       }
     }
 
+    if (typeof this.initialize == 'function') this.initialize.call(ret);
+
     return ret;
   }
 }
@@ -74,11 +76,21 @@ ss_Page = ss_Object.beget({
       return ret;
     }
   },
+  initialize: function() {
+    this.parts = this.$el.children().hide();
+    this.advance();
+  },
+  hiddenParts: function() {
+    return this.parts.filter(':hidden');
+  },
   complete: function() {
-    return true;
+    return !this.hiddenParts().length;
   },
   advance: function() {
+    if (this.complete()) return false;
 
+    this.hiddenParts().first().show();
+    return true;
   },
   hide: function() { this.$el.hide() },
   show: function() { this.$el.show() }
