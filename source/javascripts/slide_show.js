@@ -35,6 +35,10 @@ ss_Deck = ss_Object.beget({
       })
     });
   },
+  initialize: function() {
+    this.$pages.hide();
+    this.navigateTo(0);
+  },
   currentPage: null,
   $pages: null,
   pages: [],
@@ -98,8 +102,6 @@ ss_Page = ss_Object.beget({
 
 
 jQuery(function($) {
-  $('.page').hide();
-
   var deck = ss_Deck.from_selector('.page');
 
   deck.navigateTo(0);
