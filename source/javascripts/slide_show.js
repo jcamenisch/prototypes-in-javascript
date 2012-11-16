@@ -138,14 +138,24 @@ ss_Page = ss_Object.beget({
 
 
 ss_Compiler = ss_Object.beget({
+  context: {},
   compile: function(code) {
-    var output;
+    var _output, lines, variable, context = this.context;
     try {
-      output = eval(code);
+      with (context) {
+        _output = eval(code);
+      }
+      lines = code.split("\n");
+      $.each(lines, function(i, line) {
+        if (line.match(/^var /)) {
+          variable = line.split(' ')[1];
+          context[variable] = eval(variable);
+        }
+      })
     } catch (e) {
-      output = e.toLocaleString();
+      _output = e.toLocaleString();
     }
-    return output;
+    return _output;
   }
 });
 
