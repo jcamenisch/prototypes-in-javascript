@@ -29,14 +29,17 @@ ss_Deck = ss_Object.beget({
   // factory that takes a css selector:
   from_selector: function(selector) {
     return this.beget({
-      $pages: $(selector),
-      pages:  $(selector).map(function(i, el) {
-        return ss_Page.from_el(el);
-      })
+      $pages: $(selector)
     });
   },
   initialize: function() {
+    var that = this;
+
     this.$pages.hide();
+    this.pages = this.$pages.map(function(i, el) {
+      return ss_Page.from_el(el, that);
+    })
+
     this.navigateTo(0);
   },
   currentPage: null,
@@ -60,18 +63,24 @@ ss_Deck = ss_Object.beget({
   },
   rewind: function() {
     this.navigateTo(this.index - 1);
+  },
+  compile: function(code) {
+    if (!this.compiler) this.compiler = ss_Compiler.beget();
+
+    return this.compiler.compile(code);
   }
 });
 
 
 ss_Page = ss_Object.beget({
   // factory that takes a DOM element:
-  from_el: function(el) {
+  from_el: function(el, deck) {
     var $el = $(el);
     if ($el.data('ss-page-object')) {
       return $el.data('ss-page-object');
     } else {
       var ret = this.beget({
+        deck: deck,
         $el: $el,
         el:  el
       });
@@ -104,13 +113,9 @@ ss_Page = ss_Object.beget({
     this.hiddenParts.unshift($outputContainer[0]);
   },
   compile: function(part) {
-    var output;
-    try {
-      output = eval($(part).data('code'));
-    } catch (e) {
-      output = e.toLocaleString();
-    }
-    $(part).html(output);
+    $(part).html(
+      this.deck.compile($(part).data('code'))
+    );
   },
   processPart: function(part) {
     var $part = $(part);
@@ -131,6 +136,18 @@ ss_Page = ss_Object.beget({
   show: function() { this.$el.show() }
 });
 
+
+ss_Compiler = ss_Object.beget({
+  compile: function(code) {
+    var output;
+    try {
+      output = eval(code);
+    } catch (e) {
+      output = e.toLocaleString();
+    }
+    return output;
+  }
+});
 
 jQuery(function($) {
   var deck = ss_Deck.from_selector('.page');
