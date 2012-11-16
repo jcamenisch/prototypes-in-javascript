@@ -36,7 +36,7 @@ layout: default
         this.createdAt = new Date;
       };
       ConstructThing.prototype = thing;
-      var mineral = new ConstructThing();
+      mineral = new ConstructThing();
 .page
   %h3 Moving along to the rest of the universe
   %pre
@@ -94,8 +94,8 @@ layout: default
           }
           var anotherWindow = new OtherWindow(); // fine
           var anotherWindow = OtherWindow();     // doh!
-    %li
-      Constructors are not inheritable:
+    %li.split
+      %p Constructors are not inheritable:
       %pre
         :preserve
           [caveMan, club, rock].map(function(o) { return o.createdAt });
@@ -126,25 +126,29 @@ layout: default
       };
   %pre
     :preserve
-      var mineral = Object.create(thing);
+      mineral = Object.create(thing);
 
-      var organism = Object.create(thing);
+      organism = Object.create(thing);
       organism.organic = true;
 
-      var vegetable = Object.create(organism);
+      vegetable = Object.create(organism);
 
-      var animal = Object.create(organism);
+      animal = Object.create(organism);
       animal.motile = true;
 .page
   %pre
     :preserve
-      var caveMan = Object.create(animal);
-      var club = Object.create(vegetable);
-      var rock = Object.create(mineral);
+      caveMan = Object.create(animal);
+      club = Object.create(vegetable);
+      rock = Object.create(mineral);
   %pre
     :preserve
       [caveMan, club, rock].map(function(o) { return o.location });
+  %pre
+    :preserve
       [caveMan, club, rock].map(function(o) { return o.organic });
+  %pre
+    :preserve
       [caveMan, club, rock].map(function(o) { return o.motile });
 .page
   %h2 What about constructors?
@@ -161,12 +165,12 @@ layout: default
     :preserve
       thing.beget = function(properties) {
         var begotten = Object.create(this);
-        begotten.initialize;
+        begotten.initialize();
         return begotten;
       }
   %pre
     :preserve
-      var mineral = thing.beget();
+      mineral = thing.beget();
       mineral.location;
 .page
   %h2 A step further:
@@ -179,7 +183,7 @@ layout: default
     :preserve
       thing.beget = function(properties) {
         var begotten = Object.create(this);
-        begotten.initialize;
+        begotten.initialize();
         for (key in properties) {
           if (properties.hasOwnProperty(key)) {
             begotten[key] = properties[key];
@@ -190,16 +194,22 @@ layout: default
 .page
   %pre
     :preserve
-      var mineral = thing.beget();
-      var organism = thing.beget({organic: true});
-      var vegetable = organism.beget();
-      var animal = organism.beget({motile: true});
+      mineral = thing.beget();
+  %pre
+    :preserve
+      organism = thing.beget({organic: true});
+  %pre
+    :preserve
+      vegetable = organism.beget();
+  %pre
+    :preserve
+      animal = organism.beget({motile: true});
 .page
   %pre
     :preserve
-      caveMan = animal.beget();
-      club = vegetable.beget();
-      rock = mineral.beget();
+      caveMan = animal.beget(name: 'Igor');
+      club = vegetable.beget(length: '2 cubits');
+      rock = mineral.beget(weight: '50 lbs');
   %pre
     :preserve
       [caveMan, club, rock].map(function(o) { return o.location });
