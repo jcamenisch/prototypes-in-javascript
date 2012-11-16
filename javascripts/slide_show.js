@@ -29,14 +29,17 @@ ss_Deck = ss_Object.beget({
   // factory that takes a css selector:
   from_selector: function(selector) {
     return this.beget({
-      $pages: $(selector),
-      pages:  $(selector).map(function(i, el) {
-        return ss_Page.from_el(el);
-      })
+      $pages: $(selector)
     });
   },
   initialize: function() {
+    var that = this;
+
     this.$pages.hide();
+    this.pages = this.$pages.map(function(i, el) {
+      return ss_Page.from_el(el, that);
+    })
+
     this.navigateTo(0);
   },
   currentPage: null,
@@ -60,18 +63,24 @@ ss_Deck = ss_Object.beget({
   },
   rewind: function() {
     this.navigateTo(this.index - 1);
+  },
+  compile: function(code) {
+    if (!this.compiler) this.compiler = ss_Compiler.beget();
+
+    return this.compiler.compile(code);
   }
 });
 
-// Wrapper object a page
+
 ss_Page = ss_Object.beget({
   // factory that takes a DOM element:
-  from_el: function(el) {
+  from_el: function(el, deck) {
     var $el = $(el);
     if ($el.data('ss-page-object')) {
       return $el.data('ss-page-object');
     } else {
       var ret = this.beget({
+        deck: deck,
         $el: $el,
         el:  el
       });
@@ -81,25 +90,74 @@ ss_Page = ss_Object.beget({
     }
   },
   initialize: function() {
-    this.parts = this.$el.children().hide();
+    this.parts = this.$el.children();
+    this.parts.hide();
+    this.hiddenParts = this.parts.toArray();
     this.advance();
   },
-  hiddenParts: function() {
-    return this.parts.filter(':hidden');
-  },
   complete: function() {
-    return !this.hiddenParts().length;
+    return !this.hiddenParts.length;
+  },
+  splitPart: function(part) {
+    var piece, pieces = $(part).children().toArray();
+    pieces.shift();
+    while (piece = pieces.pop()) {
+      $(piece).hide();
+      this.hiddenParts.unshift(piece);
+    }
+  },
+  initCompiler: function(part) {
+    var $outputContainer = $('<div class="compiler" style="display: none" />');
+    $outputContainer.insertAfter(part);
+    $outputContainer.data('code', $(part).html());
+    this.hiddenParts.unshift($outputContainer[0]);
+  },
+  compile: function(part) {
+    $(part).html(
+      this.deck.compile($(part).data('code'))
+    );
+  },
+  processPart: function(part) {
+    var $part = $(part);
+    if ($part.is('.split')) this.splitPart(part);
+    if ($part.is('pre'))    this.initCompiler(part);
+    if ($part.data('code')) this.compile(part)
   },
   advance: function() {
     if (this.complete()) return false;
 
-    this.hiddenParts().first().show();
+    var nextPart = this.hiddenParts.shift();
+
+    this.processPart(nextPart);
+    $(nextPart).show();
     return true;
   },
   hide: function() { this.$el.hide() },
   show: function() { this.$el.show() }
 });
 
+
+ss_Compiler = ss_Object.beget({
+  context: {},
+  compile: function(code) {
+    var _output, _lines, _variable, _context = this.context;
+    try {
+      with (_context) {
+        _output = eval(code);
+        _lines = code.split("\n");
+        $.each(_lines, function(__, _line) {
+          if (_line.match(/^var /)) {
+            _variable = _line.split(' ')[1];
+            _context[_variable] = eval(_variable);
+          }
+        })
+      }
+    } catch (e) {
+      _output = e.toLocaleString();
+    }
+    return JSON.stringify(_output);
+  }
+});
 
 jQuery(function($) {
   var deck = ss_Deck.from_selector('.page');
