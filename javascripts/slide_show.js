@@ -120,10 +120,24 @@ ss_Page = ss_Object.beget({
     }
     $(part).detach();
   },
+  appendToPrev: function(part) {
+    var
+      $part = $(part),
+      $prev = $part.prev(),
+      prev = $prev[0]
+    ;
+    if (prev && part.tagName == prev.tagName && part.className == prev.className) {
+      $prev.html($prev.html() + "\n" + $part.html());
+      $part.detach();
+    }
+  },
   processPart: function(part) {
     var $part = $(part);
     if ($part.is('.split')) this.splitPart(part);
-    if ($part.is('pre'))    this.initCompiler(part);
+    if ($part.is('pre')) {
+      this.initCompiler(part);
+      this.appendToPrev(part);
+    }
     if ($part.data('code')) this.compile(part)
   },
   advance: function() {
