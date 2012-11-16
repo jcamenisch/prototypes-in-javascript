@@ -113,9 +113,12 @@ ss_Page = ss_Object.beget({
     this.hiddenParts.unshift($outputContainer[0]);
   },
   compile: function(part) {
-    $(part).html(
-      this.deck.compile($(part).data('code'))
-    );
+    var output = this.deck.compile($(part).data('code'));
+    if (typeof output !== 'undefined') {
+      var $prev = $(part).prev();
+      $prev.html($prev.html() + '  //=> ' + output);
+    }
+    $(part).detach();
   },
   processPart: function(part) {
     var $part = $(part);
