@@ -63,7 +63,7 @@ ss_Deck = ss_Object.beget({
   }
 });
 
-// Wrapper object a page
+
 ss_Page = ss_Object.beget({
   // factory that takes a DOM element:
   from_el: function(el) {
@@ -81,19 +81,50 @@ ss_Page = ss_Object.beget({
     }
   },
   initialize: function() {
-    this.parts = this.$el.children().hide();
+    this.parts = this.$el.children();
+    this.parts.hide();
+    this.hiddenParts = this.parts.toArray();
     this.advance();
   },
-  hiddenParts: function() {
-    return this.parts.filter(':hidden');
-  },
   complete: function() {
-    return !this.hiddenParts().length;
+    return !this.hiddenParts.length;
+  },
+  splitPart: function(part) {
+    var piece, pieces = $(part).children().toArray();
+    pieces.shift();
+    while (piece = pieces.pop()) {
+      $(piece).hide();
+      this.hiddenParts.unshift(piece);
+    }
+  },
+  initCompiler: function(part) {
+    var $outputContainer = $('<div class="compiler" style="display: none" />');
+    $outputContainer.insertAfter(part);
+    $outputContainer.data('code', $(part).html());
+    this.hiddenParts.unshift($outputContainer[0]);
+  },
+  compile: function(part) {
+    var output;
+    try {
+      output = eval($(part).data('code'));
+    } catch (e) {
+      output = e.toLocaleString();
+    }
+    $(part).html(output);
+  },
+  processPart: function(part) {
+    var $part = $(part);
+    if ($part.is('.split')) this.splitPart(part);
+    if ($part.is('pre'))    this.initCompiler(part);
+    if ($part.data('code')) this.compile(part)
   },
   advance: function() {
     if (this.complete()) return false;
 
-    this.hiddenParts().first().show();
+    var nextPart = this.hiddenParts.shift();
+
+    this.processPart(nextPart);
+    $(nextPart).show();
     return true;
   },
   hide: function() { this.$el.hide() },
