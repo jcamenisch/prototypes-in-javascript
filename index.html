@@ -43,7 +43,7 @@
     <h3>Then, to inherit from thing.</h3>
     <p>The old-fashioned way takes 3 lines:</p>
   </div>
-  <pre>var ConstructThing = function() {};</pre>
+  <pre>var ConstructThing = function(){};</pre>
   <pre>ConstructThing.prototype = thing;</pre>
   <pre>var mineral = new ConstructThing();</pre>
   <pre>mineral;</pre>
@@ -84,7 +84,7 @@
     <li>It&#8217;s rather awkward (verbose, and conflicted).</li>
     <li>
       The danger of forgetting &#8220;new&#8221;:
-      <pre>var OtherWindow = function(location) {&#x000A;  this.location = location;&#x000A;}&#x000A;var anotherWindow = new OtherWindow(); // fine&#x000A;var anotherWindow = OtherWindow();     // doh!</pre>
+      <pre>var OtherWindow = function(location) {&#x000A;  this.location = location;&#x000A;};&#x000A;var anotherWindow = new OtherWindow('http://google.com'); // fine&#x000A;var anotherWindow = OtherWindow('http://google.com');     // doh!</pre>
     </li>
     <li class='split'>
       <p>Constructors are not inheritable:</p>
@@ -94,11 +94,15 @@
   </ol>
 </div>
 <div class='page'>
-  <h3>
-    Why use inheritance at all?
-  </h3>
+  <h3>Why use inheritance at all?</h3>
+  <ul class='split'>
+    <li>Memory efficiency FTW! (or not)</li>
+    <li>Super-quick creation of objects (for what it’s worth)</li>
+    <li>Simple & clean model for code reuse</li>
+  </ul>
+  <h3>In any case</h3>
   <p>
-    Memory efficiency FTW!
+    If you use inheritance in JavaScript, consider using prototypes directly.
   </p>
 </div>
 <div class='page'>
@@ -131,9 +135,10 @@
     <a href='http://javascript.crockford.com/prototypal.html'>Crockford</a>
     ):
   </p>
-  <pre>thing.initialize = function() {&#x000A;  this.createdAt = (new Date).toTimeString();&#x000A;}</pre>
-  <pre>thing.beget = function() {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize();&#x000A;  return begotten;&#x000A;}</pre>
-  <pre>mineral = thing.beget();&#x000A;mineral.location;</pre>
+  <pre>thing.initialize = function() {&#x000A;  this.createdAt = (new Date).toTimeString();&#x000A;};</pre>
+  <pre>thing.beget = function() {&#x000A;  var begotten = Object.create(this);&#x000A;  begotten.initialize();&#x000A;  return begotten;&#x000A;};</pre>
+  <pre>mineral = thing.beget();</pre>
+  <pre>mineral.location;</pre>
   <h2>A step further:</h2>
   <p>Target: provide for initializing properties with</p>
   <pre>// something = thing.beget({prop: 'value', ...});</pre>

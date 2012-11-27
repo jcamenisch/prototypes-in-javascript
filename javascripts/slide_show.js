@@ -38,7 +38,7 @@ ss_Deck = ss_Object.beget({
     this.$pages.hide();
     this.pages = this.$pages.map(function(i, el) {
       return ss_Page.fromEl(el, that);
-    })
+    });
 
     this.navigateTo(0);
   },
@@ -139,7 +139,7 @@ ss_Page = ss_Object.beget({
       this.initCompiler(part);
       this.appendToPrev(part);
     }
-    if ($part.data('code')) this.compile(part)
+    if ($part.data('code')) this.compile(part);
   },
   advance: function() {
     if (this.complete()) return false;
@@ -152,7 +152,7 @@ ss_Page = ss_Object.beget({
     return true;
   },
   scrollToBottom: function(milliseconds) {
-    $('body').stop().animate({scrollTop: $('body').height()}, milliseconds || 0);
+    $('body').stop().animate({scrollTop: document.height - window.innerHeight}, milliseconds || 0);
   },
   hide: function() { this.$el.hide() },
   show: function() { this.$el.show() }
