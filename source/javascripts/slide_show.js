@@ -152,7 +152,7 @@ ss_Page = ss_Object.beget({
     return true;
   },
   scrollToBottom: function(milliseconds) {
-    $('body').stop().animate({scrollTop: $('body').height()}, milliseconds || 0);
+    $('body').stop().animate({scrollTop: document.height - window.innerHeight}, milliseconds || 0);
   },
   hide: function() { this.$el.hide() },
   show: function() { this.$el.show() }
