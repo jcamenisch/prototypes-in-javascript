@@ -118,6 +118,8 @@ ss_Page = ss_Object.beget({
     if (typeof output !== 'undefined') {
       var $prev = $(part).prev();
       $prev.html($prev.html() + '  //=> ' + output);
+    } else {
+      $(part).data('skip', true);
     }
     $(part).detach();
   },
@@ -147,9 +149,13 @@ ss_Page = ss_Object.beget({
     var nextPart = this.hiddenParts.shift();
 
     this.processPart(nextPart);
-    $(nextPart).show();
-    this.scrollToBottom(500);
-    return true;
+    if (!$(nextPart).data('skip')) {
+      $(nextPart).show();
+      this.scrollToBottom(500);
+      return true;
+    } else {
+      return this.advance();
+    }
   },
   scrollToBottom: function(milliseconds) {
     $('body').stop().animate({scrollTop: document.height - window.innerHeight}, milliseconds || 0);
