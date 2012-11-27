@@ -16,60 +16,82 @@ layout: default
         organic: false,
         motile: false
       };
-.page
   .header
     %h3 Then, to inherit from thing.
     %p The old-fashioned way takes 3 lines:
   %pre
     :preserve
       var ConstructThing = function() {};
+  %pre
+    :preserve
       ConstructThing.prototype = thing;
+  %pre
+    :preserve
       var mineral = new ConstructThing();
   %pre
     :preserve
       mineral.location;
-.page
   %h3 We could have the constructor do something:
   %pre
     :preserve
       var ConstructThing = function() {
         this.createdAt = new Date;
       };
+  %pre
+    :preserve
       ConstructThing.prototype = thing;
+  %pre
+    :preserve
       mineral = new ConstructThing();
-.page
   %h3 Moving along to the rest of the universe
   %pre
     :preserve
       var ConstructMineral = function(){};
+  %pre
+    :preserve
       ConstructMineral.prototype = mineral;
   %pre
     :preserve
       var organism = new ConstructThing();
+  %pre
+    :preserve
       organism.organic = true;
+  %pre
+    :preserve
 
       var ConstructOrganism = function(){};
+  %pre
+    :preserve
       ConstructOrganism.prototype = organism;
-.page
   %pre
     :preserve
       var vegetable = new ConstructOrganism;
+  %pre
+    :preserve
       var ConstructVegetable = function(){};
+  %pre
+    :preserve
       ConstructVegetable.prototype = vegetable;
-.page
   %pre
     :preserve
       var animal = new ConstructOrganism;
+  %pre
+    :preserve
       animal.motile = true;
   %pre
     :preserve
       var ConstructAnimal = function(){};
+  %pre
+    :preserve
       ConstructAnimal.prototype = animal;
-.page
   %pre
     :preserve
       var caveMan = new ConstructAnimal;
+  %pre
+    :preserve
       var club = new ConstructVegetable;
+  %pre
+    :preserve
       var rock = new ConstructMineral;
   %pre
     :preserve
@@ -115,7 +137,6 @@ layout: default
         Constructor.prototype = proto;
         return new Constructor();
       };
-.page
   %h2 Let's set up that taxonomy up again.
   %pre
     :preserve
@@ -127,19 +148,32 @@ layout: default
   %pre
     :preserve
       mineral = Object.create(thing);
+  %pre
+    :preserve
 
       organism = Object.create(thing);
+  %pre
+    :preserve
       organism.organic = true;
+  %pre
+    :preserve
 
       vegetable = Object.create(organism);
+  %pre
+    :preserve
 
       animal = Object.create(organism);
+  %pre
+    :preserve
       animal.motile = true;
-.page
   %pre
     :preserve
       caveMan = Object.create(animal);
+  %pre
+    :preserve
       club = Object.create(vegetable);
+  %pre
+    :preserve
       rock = Object.create(mineral);
   %pre
     :preserve
@@ -172,13 +206,11 @@ layout: default
     :preserve
       mineral = thing.beget();
       mineral.location;
-.page
   %h2 A step further:
   %p Target: provide for initializing properties with
   %pre
     :preserve
       // something = thing.beget({prop: 'value', ...});
-.page
   %pre
     :preserve
       thing.beget = function(properties) {
@@ -191,7 +223,6 @@ layout: default
         }
         return begotten;
       };
-.page
   %pre
     :preserve
       mineral = thing.beget();
@@ -204,12 +235,15 @@ layout: default
   %pre
     :preserve
       animal = organism.beget({motile: true});
-.page
   %pre
     :preserve
-      caveMan = animal.beget(name: 'Igor');
-      club = vegetable.beget(length: '2 cubits');
-      rock = mineral.beget(weight: '50 lbs');
+      caveMan = animal.beget({name: 'Igor'});
+  %pre
+    :preserve
+      club = vegetable.beget({length: '2 cubits'});
+  %pre
+    :preserve
+      rock = mineral.beget({weight: '50 lbs'});
   %pre
     :preserve
       [caveMan, club, rock].map(function(o) { return o.location });
@@ -223,7 +257,6 @@ layout: default
     :preserve
       [caveMan, club, rock].map(function(o) { return o.createdAt });
 
-.page
   %h2 Recommended Reading
   :markdown
     - See the [Source code](/javascripts/slide_show.js) to this slide deck for a less contrived example.

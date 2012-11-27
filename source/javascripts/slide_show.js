@@ -147,6 +147,7 @@ ss_Page = ss_Object.beget({
 
     this.processPart(nextPart);
     $(nextPart).show();
+    $('body').animate({scrollTop: $('body').height()}, 500);
     return true;
   },
   hide: function() { this.$el.hide() },
