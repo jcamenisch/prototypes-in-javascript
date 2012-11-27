@@ -30,12 +30,24 @@ layout: default
       var mineral = new ConstructThing();
   %pre
     :preserve
+      mineral;
+  %pre
+    :preserve
       mineral.location;
+  %pre
+    :preserve
+      mineral.organic;
+  %pre
+    :preserve
+      mineral.motile;
+  %pre
+    :preserve
+      Object.getPrototypeOf(mineral); /* ECMAScript 5 */
   %h3 We could have the constructor do something:
   %pre
     :preserve
       var ConstructThing = function() {
-        this.createdAt = new Date;
+        this.createdAt = (new Date).toTimeString();
       };
   %pre
     :preserve
@@ -106,7 +118,7 @@ layout: default
   %h3
     Problems with this approach:
   %ol.split
-    %li It's rather awkward. (verbose, and conflicted)
+    %li It's rather awkward (verbose, and conflicted).
     %li
       The danger of forgetting "new":
       %pre
@@ -121,6 +133,9 @@ layout: default
       %pre
         :preserve
           [caveMan, club, rock].map(function(o) { return o.createdAt });
+      %pre
+        :preserve
+          [organism, mineral].map(function(o) { return o.createdAt });
 .page
   .header
     %h3 Could there be a less awkward way to inherit?
@@ -193,11 +208,11 @@ layout: default
   %pre
     :preserve
       thing.initialize = function() {
-        this.createdAt = new Date;
+        this.createdAt = (new Date).toTimeString();
       }
   %pre
     :preserve
-      thing.beget = function(properties) {
+      thing.beget = function() {
         var begotten = Object.create(this);
         begotten.initialize();
         return begotten;
