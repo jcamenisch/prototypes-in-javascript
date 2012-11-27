@@ -137,17 +137,14 @@ layout: default
         :preserve
           [organism, mineral].map(function(o) { return o.createdAt });
 .page
-  :markdown
-    ### Why use inheritance at all?
-
-    - Memory efficiency FTW! (or not)
-    - Super-quick creation of objects (for what it’s worth)
-    - Simple & clean model for code reuse
-
-    ### In any case
-
-    If you use inheritance in JavaScript, by all means use prototypes directly
-    (with some caveats, blah, blah).
+  %h3 Why use inheritance at all?
+  %ul.split
+    %li Memory efficiency FTW! (or not)
+    %li Super-quick creation of objects (for what it’s worth)
+    %li Simple & clean model for code reuse
+  %h3 In any case
+  %p
+    If you use inheritance in JavaScript, consider using prototypes directly.
 
 .page
   .header
@@ -233,6 +230,8 @@ layout: default
   %pre
     :preserve
       mineral = thing.beget();
+  %pre
+    :preserve
       mineral.location;
   %h2 A step further:
   %p Target: provide for initializing properties with
