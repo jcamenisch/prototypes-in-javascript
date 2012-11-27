@@ -63,6 +63,7 @@ ss_Deck = ss_Object.beget({
   },
   rewind: function() {
     this.navigateTo(this.index - 1);
+    this.currentPage.scrollToBottom(0);
   },
   compile: function(code) {
     if (!this.compiler) this.compiler = ss_Compiler.beget();
@@ -147,7 +148,11 @@ ss_Page = ss_Object.beget({
 
     this.processPart(nextPart);
     $(nextPart).show();
+    this.scrollToBottom(500);
     return true;
+  },
+  scrollToBottom: function(milliseconds) {
+    $('body').stop().animate({scrollTop: $('body').height()}, milliseconds || 0);
   },
   hide: function() { this.$el.hide() },
   show: function() { this.$el.show() }
@@ -181,7 +186,6 @@ jQuery(function($) {
 
   deck.navigateTo(0);
 
-  $(document).click(function(){ deck.advance() });
   Mousetrap.bind(['right', 'down', 'space', 'enter'], function(){ deck.advance() });
   Mousetrap.bind(['left', 'up'], function(){ deck.rewind() });
 });
