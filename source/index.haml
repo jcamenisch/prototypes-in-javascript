@@ -21,7 +21,7 @@ layout: default
     %p The old-fashioned way takes 3 lines:
   %pre
     :preserve
-      var ConstructThing = function() {};
+      var ConstructThing = function(){};
   %pre
     :preserve
       ConstructThing.prototype = thing;
@@ -125,9 +125,9 @@ layout: default
         :preserve
           var OtherWindow = function(location) {
             this.location = location;
-          }
-          var anotherWindow = new OtherWindow(); // fine
-          var anotherWindow = OtherWindow();     // doh!
+          };
+          var anotherWindow = new OtherWindow('http://google.com'); // fine
+          var anotherWindow = OtherWindow('http://google.com');     // doh!
     %li.split
       %p Constructors are not inheritable:
       %pre
@@ -137,10 +137,18 @@ layout: default
         :preserve
           [organism, mineral].map(function(o) { return o.createdAt });
 .page
-  %h3
-    Why use inheritance at all?
-  %p
-    Memory efficiency FTW!
+  :markdown
+    ### Why use inheritance at all?
+
+    - Memory efficiency FTW! (or not)
+    - Super-quick creation of objects (for what it’s worth)
+    - Simple & clean model for code reuse
+
+    ### In any case
+
+    If you use inheritance in JavaScript, by all means use prototypes directly
+    (with some caveats, blah, blah).
+
 .page
   .header
     %h3 Could there be a less awkward way to inherit?
@@ -214,14 +222,14 @@ layout: default
     :preserve
       thing.initialize = function() {
         this.createdAt = (new Date).toTimeString();
-      }
+      };
   %pre
     :preserve
       thing.beget = function() {
         var begotten = Object.create(this);
         begotten.initialize();
         return begotten;
-      }
+      };
   %pre
     :preserve
       mineral = thing.beget();
