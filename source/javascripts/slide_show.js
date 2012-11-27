@@ -27,7 +27,7 @@ ss_Object = {
 
 ss_Deck = ss_Object.beget({
   // factory that takes a css selector:
-  from_selector: function(selector) {
+  fromSelector: function(selector) {
     return this.beget({
       $pages: $(selector)
     });
@@ -37,8 +37,8 @@ ss_Deck = ss_Object.beget({
 
     this.$pages.hide();
     this.pages = this.$pages.map(function(i, el) {
-      return ss_Page.from_el(el, that);
-    })
+      return ss_Page.fromEl(el, that);
+    });
 
     this.navigateTo(0);
   },
@@ -75,7 +75,7 @@ ss_Deck = ss_Object.beget({
 
 ss_Page = ss_Object.beget({
   // factory that takes a DOM element:
-  from_el: function(el, deck) {
+  fromEl: function(el, deck) {
     var $el = $(el);
     if ($el.data('ss-page-object')) {
       return $el.data('ss-page-object');
@@ -139,7 +139,7 @@ ss_Page = ss_Object.beget({
       this.initCompiler(part);
       this.appendToPrev(part);
     }
-    if ($part.data('code')) this.compile(part)
+    if ($part.data('code')) this.compile(part);
   },
   advance: function() {
     if (this.complete()) return false;
@@ -182,7 +182,7 @@ ss_Compiler = ss_Object.beget({
 });
 
 jQuery(function($) {
-  var deck = ss_Deck.from_selector('.page');
+  var deck = ss_Deck.fromSelector('.page');
 
   deck.navigateTo(0);
 
