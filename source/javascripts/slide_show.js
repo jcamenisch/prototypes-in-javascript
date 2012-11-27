@@ -182,7 +182,6 @@ jQuery(function($) {
 
   deck.navigateTo(0);
 
-  $(document).click(function(){ deck.advance() });
   Mousetrap.bind(['right', 'down', 'space', 'enter'], function(){ deck.advance() });
   Mousetrap.bind(['left', 'up'], function(){ deck.rewind() });
 });
