@@ -20,7 +20,18 @@ ss_Object = {
       }
     }
   },
+  requiredProperties: {},
   beget: function(properties) {
+    for (name in this.requiredProperties) {
+      if (!(properties && properties.hasOwnProperty(name))) {
+        var errorMsg = "Must provide property " + name;
+        if (this.requiredProperties[name]) {
+          errorMsg += ': ' + this.requiredProperties[name];
+        }
+        throw errorMsg;
+      }
+    }
+
     var ret = Object.create(this);
 
     ret.copyMembers(properties);
@@ -33,11 +44,8 @@ ss_Object = {
 
 
 ss_Deck = ss_Object.beget({
-  // factory that takes a css selector:
-  fromSelector: function(selector) {
-    return this.beget({
-      $pages: $(selector)
-    });
+  requiredProperties: {
+    $pages: 'a jQuery object containing all the html elements that will function as pages (or slides)'
   },
   initialize: function() {
     var that = this;
@@ -195,7 +203,7 @@ ss_Compiler = ss_Object.beget({
 });
 
 jQuery(function($) {
-  var deck = ss_Deck.fromSelector('.page');
+  var deck = ss_Deck.beget({$pages: $('.page')});
 
   deck.navigateTo(0);
 
