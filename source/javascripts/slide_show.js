@@ -9,14 +9,21 @@ if (typeof Object.create !== 'function') {
 
 
 ss_Object = {
+  copyMembers: function(fromObject, toObject) {
+    if (typeof toObject === 'undefined') {
+      toObject = this;
+    }
+
+    for (name in fromObject) {
+      if (fromObject.hasOwnProperty(name)) {
+        toObject[name] = fromObject[name];
+      }
+    }
+  },
   beget: function(properties) {
     var ret = Object.create(this);
 
-    for (name in properties) {
-      if (properties.hasOwnProperty(name)) {
-        ret[name] = properties[name];
-      }
-    }
+    ret.copyMembers(properties);
 
     if (typeof this.initialize == 'function') this.initialize.call(ret);
 
