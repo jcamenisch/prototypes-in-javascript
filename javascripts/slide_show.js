@@ -9,14 +9,32 @@ if (typeof Object.create !== 'function') {
 
 
 ss_Object = {
-  beget: function(properties) {
-    var ret = Object.create(this);
+  copyMembers: function(fromObject, toObject) {
+    if (typeof toObject === 'undefined') {
+      toObject = this;
+    }
 
-    for (name in properties) {
-      if (properties.hasOwnProperty(name)) {
-        ret[name] = properties[name];
+    for (name in fromObject) {
+      if (fromObject.hasOwnProperty(name)) {
+        toObject[name] = fromObject[name];
       }
     }
+  },
+  requiredProperties: {},
+  beget: function(properties) {
+    for (name in this.requiredProperties) {
+      if (!(properties && properties.hasOwnProperty(name))) {
+        var errorMsg = "Must provide property " + name;
+        if (this.requiredProperties[name]) {
+          errorMsg += ': ' + this.requiredProperties[name];
+        }
+        throw errorMsg;
+      }
+    }
+
+    var ret = Object.create(this);
+
+    ret.copyMembers(properties);
 
     if (typeof this.initialize == 'function') this.initialize.call(ret);
 
@@ -26,18 +44,15 @@ ss_Object = {
 
 
 ss_Deck = ss_Object.beget({
-  // factory that takes a css selector:
-  fromSelector: function(selector) {
-    return this.beget({
-      $pages: $(selector)
-    });
+  requiredProperties: {
+    $pages: 'a jQuery object containing all the html elements that will function as pages (or slides)'
   },
   initialize: function() {
     var that = this;
 
     this.$pages.hide();
     this.pages = this.$pages.map(function(i, el) {
-      return ss_Page.fromEl(el, that);
+      return ss_Page.beget({el: el, deck: that});
     });
 
     this.navigateTo(0);
@@ -74,23 +89,12 @@ ss_Deck = ss_Object.beget({
 
 
 ss_Page = ss_Object.beget({
-  // factory that takes a DOM element:
-  fromEl: function(el, deck) {
-    var $el = $(el);
-    if ($el.data('ss-page-object')) {
-      return $el.data('ss-page-object');
-    } else {
-      var ret = this.beget({
-        deck: deck,
-        $el: $el,
-        el:  el
-      });
-      // Use jQuery to memoize:
-      $el.data('ss-page-object', ret);
-      return ret;
-    }
+  requiredProperties: {
+    el: 'the DOM element that this page object wraps',
+    deck: 'the ss_Deck object that contins this page',
   },
   initialize: function() {
+    this.$el = $(this.el);
     this.parts = this.$el.children();
     this.parts.hide();
     this.hiddenParts = this.parts.toArray();
@@ -188,7 +192,7 @@ ss_Compiler = ss_Object.beget({
 });
 
 jQuery(function($) {
-  var deck = ss_Deck.fromSelector('.page');
+  var deck = ss_Deck.beget({$pages: $('.page')});
 
   deck.navigateTo(0);
 
