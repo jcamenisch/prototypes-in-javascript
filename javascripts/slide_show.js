@@ -9,14 +9,10 @@ if (typeof Object.create !== 'function') {
 
 
 ss_Object = {
-  copyMembers: function(fromObject, toObject) {
-    if (typeof toObject === 'undefined') {
-      toObject = this;
-    }
-
-    for (name in fromObject) {
-      if (fromObject.hasOwnProperty(name)) {
-        toObject[name] = fromObject[name];
+  copyMembers: function(fromObj) {
+    for (name in fromObj) {
+      if (fromObj.hasOwnProperty(name)) {
+        this[name] = fromObj[name];
       }
     }
   },
