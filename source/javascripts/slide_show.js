@@ -52,7 +52,7 @@ ss_Deck = ss_Object.beget({
 
     this.$pages.hide();
     this.pages = this.$pages.map(function(i, el) {
-      return ss_Page.fromEl(el, that);
+      return ss_Page.beget({el: el, deck: that});
     });
 
     this.navigateTo(0);
@@ -89,23 +89,12 @@ ss_Deck = ss_Object.beget({
 
 
 ss_Page = ss_Object.beget({
-  // factory that takes a DOM element:
-  fromEl: function(el, deck) {
-    var $el = $(el);
-    if ($el.data('ss-page-object')) {
-      return $el.data('ss-page-object');
-    } else {
-      var ret = this.beget({
-        deck: deck,
-        $el: $el,
-        el:  el
-      });
-      // Use jQuery to memoize:
-      $el.data('ss-page-object', ret);
-      return ret;
-    }
+  requiredProperties: {
+    el: 'the DOM element that this page object wraps',
+    deck: 'the ss_Deck object that contins this page',
   },
   initialize: function() {
+    this.$el = $(this.el);
     this.parts = this.$el.children();
     this.parts.hide();
     this.hiddenParts = this.parts.toArray();
