@@ -15,7 +15,8 @@ on the history of prototype-based languages.
 
 This single-page site is built on [Octopress](http://octopress.org) for convenience.
 The behavior of the slides is custom-coded as an exercise in using the techniques
-described in the presentation.
+described in the presentation. See the [source/javascripts/slide_show.js](source/javascripts/slide_show.js)
+file for the fun parts.
 
 
 ## License
